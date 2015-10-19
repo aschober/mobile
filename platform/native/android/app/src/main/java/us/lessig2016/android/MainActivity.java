@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -25,11 +26,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import us.lessig2016.android.fragments.CameraFragment;
+import us.lessig2016.android.fragments.PostDetailFragment;
 import us.lessig2016.android.fragments.PostFragment;
 
 public class MainActivity extends AppCompatActivity implements PostFragment.OnFragmentInteractionListener,
-        CameraFragment.OnFragmentInteractionListener {
+        CameraFragment.OnFragmentInteractionListener,
+        PostDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
+
+    private PostFragment mPostFragment;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,12 +44,12 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    //private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    //private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.lessig_logo);
 
+        /*
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        /*
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         */
@@ -77,6 +82,15 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
             }
         });
 
+        if(savedInstanceState == null) {
+            if(mPostFragment == null) {
+                mPostFragment = PostFragment.newInstance(null, null);
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content, mPostFragment)
+                    .commit();
+        }
     }
 
 
@@ -100,6 +114,18 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
     }
 
     @Override
+    public void onBackPressed(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i(TAG, "popping backstack");
+            fm.popBackStackImmediate();
+        } else {
+            Log.i(TAG, "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -115,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
     public void onFragmentInteraction(String id) {
         Log.d(TAG, "PostFragment.onFragmentInteraction: " + id);
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, PostDetailFragment.newInstance(null, null));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -128,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
+    /*
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -164,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
             return null;
         }
     }
+    */
 
     /**
      * A placeholder fragment containing a simple view.
