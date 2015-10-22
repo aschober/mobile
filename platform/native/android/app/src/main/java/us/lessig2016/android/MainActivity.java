@@ -25,6 +25,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import us.lessig2016.android.api.Lessig2016Api;
 import us.lessig2016.android.fragments.CameraFragment;
 import us.lessig2016.android.fragments.PostDetailFragment;
 import us.lessig2016.android.fragments.PostFragment;
@@ -33,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         CameraFragment.OnFragmentInteractionListener,
         PostDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
+    public static final String BASE_URL = "JAWS_URL_HERE";
+
 
     private PostFragment mPostFragment;
+    private Lessig2016Api mApiService;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,12 +63,14 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.lessig_logo);
+        toolbar.setLogo(R.drawable.lessig_header_logo);
 
         /*
         // Create the adapter that will return a fragment for each of the three
@@ -82,6 +94,18 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
             }
         });
 
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        mApiService = retrofit.create(Lessig2016Api.class);
+
         if(savedInstanceState == null) {
             if(mPostFragment == null) {
                 mPostFragment = PostFragment.newInstance(null, null);
@@ -92,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,6 +176,9 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
 
     }
 
+    public Lessig2016Api getApiService() {
+        return mApiService;
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

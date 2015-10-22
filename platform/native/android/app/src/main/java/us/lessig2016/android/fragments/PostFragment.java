@@ -3,17 +3,34 @@ package us.lessig2016.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
+import us.lessig2016.android.MainActivity;
 import us.lessig2016.android.R;
 import us.lessig2016.android.adapters.PostArrayAdapter;
 import us.lessig2016.android.adapters.dummy.DummyContent;
+import us.lessig2016.android.api.Lessig2016Api;
+import us.lessig2016.android.api.models.Feed;
+import us.lessig2016.android.api.models.Post;
 
 /**
  * A fragment representing a list of Items.
@@ -25,6 +42,7 @@ import us.lessig2016.android.adapters.dummy.DummyContent;
  * interface.
  */
 public class PostFragment extends Fragment implements AbsListView.OnItemClickListener {
+    private static final String TAG = "PostFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,6 +65,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
      * Views.
      */
     private ListAdapter mAdapter;
+    private ArrayList<Post> mPosts;
 
     // TODO: Rename and change types of parameters
     public static PostFragment newInstance(String param1, String param2) {
@@ -67,6 +86,8 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -74,9 +95,10 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your title
-        mAdapter = new PostArrayAdapter<DummyContent.PostItem>(getActivity(),
-                R.layout.list_item_post, DummyContent.ITEMS);
+        mPosts = new ArrayList<>();
+        mAdapter = new PostArrayAdapter<Post>(getActivity(),
+                R.layout.list_item_post, mPosts);
+        requestPosts();
     }
 
     @Override
@@ -118,6 +140,28 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             // fragment is attached to one) that an item has been selected.
             mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).getId());
         }
+    }
+
+    private void requestPosts() {
+        Log.d(TAG, "requestPosts");
+        Call<Feed> call = ((MainActivity) getActivity()).getApiService().getFeed();
+        call.enqueue(new Callback<Feed>() {
+            @Override
+            public void onResponse(Response<Feed> response, Retrofit retrofit) {
+                int statusCode = response.code();
+                Feed feed = response.body();
+                Log.d(TAG, "Feed: " + feed.getData().toString());
+
+                mPosts.addAll(feed.getData());
+                ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // Log error here since request failed
+                Log.d(TAG, "Feed Error: " + t.toString());
+            }
+        });
     }
 
     /**
