@@ -13,22 +13,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.ArrayList;
 
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 import us.lessig2016.android.MainActivity;
 import us.lessig2016.android.R;
 import us.lessig2016.android.adapters.PostArrayAdapter;
 import us.lessig2016.android.adapters.dummy.DummyContent;
-import us.lessig2016.android.api.Lessig2016Api;
 import us.lessig2016.android.api.models.Feed;
 import us.lessig2016.android.api.models.Post;
 
@@ -98,7 +92,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         mPosts = new ArrayList<>();
         mAdapter = new PostArrayAdapter<Post>(getActivity(),
                 R.layout.list_item_post, mPosts);
-        requestPosts();
+        requestFeed();
     }
 
     @Override
@@ -142,15 +136,13 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         }
     }
 
-    private void requestPosts() {
-        Log.d(TAG, "requestPosts");
+    private void requestFeed() {
         Call<Feed> call = ((MainActivity) getActivity()).getApiService().getFeed();
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Response<Feed> response, Retrofit retrofit) {
                 int statusCode = response.code();
                 Feed feed = response.body();
-                Log.d(TAG, "Feed: " + feed.getData().toString());
 
                 mPosts.addAll(feed.getData());
                 ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
@@ -159,7 +151,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             @Override
             public void onFailure(Throwable t) {
                 // Log error here since request failed
-                Log.d(TAG, "Feed Error: " + t.toString());
+                Log.e(TAG, "Fetching Feed Error: " + t.toString());
             }
         });
     }

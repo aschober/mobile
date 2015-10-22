@@ -68,7 +68,6 @@ public class PostArrayAdapter<T> extends ArrayAdapter<T> {
         String description = "";
         String footer = "";
 
-        Log.d(TAG, "Post: " + post.getName() + ", updated_time: " + post.getUpdatedTime() + ", full_picture: " + post.getFullPicture());
         if(post.getType().equals("photo")) {
             title = post.getFrom().getName();
             description = post.getMessage();
