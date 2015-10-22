@@ -22,7 +22,6 @@ import retrofit.Retrofit;
 import us.lessig2016.android.MainActivity;
 import us.lessig2016.android.R;
 import us.lessig2016.android.adapters.PostArrayAdapter;
-import us.lessig2016.android.adapters.dummy.DummyContent;
 import us.lessig2016.android.api.models.Feed;
 import us.lessig2016.android.api.models.Post;
 
@@ -132,7 +131,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).getId());
+            mListener.onFragmentInteraction(mPosts.get(position).getId());
         }
     }
 

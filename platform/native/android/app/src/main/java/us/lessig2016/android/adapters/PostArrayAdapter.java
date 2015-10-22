@@ -1,7 +1,6 @@
 package us.lessig2016.android.adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import us.lessig2016.android.R;
-import us.lessig2016.android.adapters.dummy.DummyContent;
 import us.lessig2016.android.api.models.Post;
 import us.lessig2016.android.helpers.LessigHelpers;
 
