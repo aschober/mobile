@@ -1,7 +1,6 @@
 package us.lessig2016.android.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import us.lessig2016.android.R;
+import us.lessig2016.android.api.Action;
 import us.lessig2016.android.helpers.LessigHelpers;
 
 /**
@@ -66,14 +65,10 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
                     "ArrayAdapter requires the resource ID to be a TextView", e);
         }
 
-        final ParseObject action = (ParseObject) getItem(position);
-        String title = "";
-        String description = "";
-        String footer = "";
-
-        title = action.getString("title");
-        description = action.getString("message");
-        footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
+        final Action action = (Action) getItem(position);
+        String title = action.getTitle();
+        String description = action.getMessage();
+        String footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
 
         titleView.setText(title);
         descriptionView.setText(description);

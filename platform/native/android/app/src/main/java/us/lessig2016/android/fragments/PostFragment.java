@@ -25,6 +25,7 @@ import java.util.List;
 
 import us.lessig2016.android.R;
 import us.lessig2016.android.adapters.ActionArrayAdapter;
+import us.lessig2016.android.api.Action;
 
 /**
  * A fragment representing a list of Items.
@@ -51,7 +52,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
      * Views.
      */
     private ListAdapter mActionAdapter;
-    private ArrayList<ParseObject> mActions;
+    private ArrayList<Action> mActions;
 
     // TODO: Rename and change types of parameters
     public static PostFragment newInstance() {
@@ -147,11 +148,11 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     private void requestFeed() {
-        ParseQuery<ParseObject> feedQuery = ParseQuery.getQuery("Action");
+        ParseQuery<Action> feedQuery = ParseQuery.getQuery(Action.class);
         feedQuery.addDescendingOrder("priority");
         feedQuery.addDescendingOrder("createdAt");
-        feedQuery.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> feedList, ParseException e) {
+        feedQuery.findInBackground(new FindCallback<Action>() {
+            public void done(List<Action> feedList, ParseException e) {
                 if (e == null) {
                     Log.d(TAG, "Retrieved " + feedList.size() + " actions");
                     mActions.clear();
