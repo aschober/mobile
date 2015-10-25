@@ -51,19 +51,19 @@ query.addDescendingOrder("createdAt")
 
 Most actions have additional fields that are needed to fulfil the integrations, etc.
 
-#### Url
+#### Visit a Webpage: `url`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | ref | url | Y | The url to open up in the user's web-browser. (Not in-app webview) |
 
-#### Call
+#### Make a Phone Call: `call`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | ref | string | Y | The phone number (only digits, no dashes, periods, etc) this should prompt the user to dial, but not call the number without the user clicking the actual call button. (i.e. Android Dial intent) | 
 
-#### Email
+#### Send an Email: `email`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
@@ -71,45 +71,45 @@ Most actions have additional fields that are needed to fulfil the integrations, 
 | body | string | Y | The text that should pre-populate the email body. |
 | recipients | Array<string> | Y | An array of email addresses that should pre-populate in the To: field of the email. |
 
-#### Tweet
+#### Send a Tweet: `tweet`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | body | string | Y | The text that should pre-populate as the tweet. | 
 
-#### Retweet
+#### Retweet a Message: `retweet`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | ref | string | Y | The id of the tweet that needs to be retweeted. | 
 
-#### tweet_reply
+#### Reply to a Tweet: `tweet_reply`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | body | string | Y | The text that should pre-populate the text of the reply. |
 | ref | string | Y | The id of the tweet that should be replied to. | 
 
-#### fb_post
+#### Post to Facebook: `fb_post`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | body | string | Y | The text that should pre-populate the Facebook post. | 
 
-#### fb_share
+#### Share a Link on Facebook: `fb_share`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | ref | string | Y | The url that needs to be shared via Facebook. | 
 | body | string | Y | The text that should pre-populate the Facebook share post. |
 
-#### avatar
+#### Update your Social Media Avatars: `avatar`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | ref | string | Y | The url or base64 encoded image to use in-place of the user's avatar on social networks. | 
 
-#### instagram
+#### Post to Instagram: `instagram`
 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
