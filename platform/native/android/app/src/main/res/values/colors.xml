@@ -2,7 +2,11 @@
 <resources>
     <color name="colorPrimary">#A3463E</color>
     <color name="colorPrimaryDark">#81261F</color>
-    <color name="colorAccent">#4A5DE0</color>
+    <color name="colorAccent">#4454E4</color>
+
     <color name="colorDonateBlue">#3A99D8</color>
     <color name="colorLessigBlue">#4454E4</color>
+    <color name="colorActionListShare">#747474</color>
+    <color name="colorActionListSharePressed">#A1A1A1</color>
+
 </resources>

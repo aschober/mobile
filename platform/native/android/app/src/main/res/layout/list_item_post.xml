@@ -5,7 +5,8 @@
     android:paddingTop="2dip"
     android:paddingBottom="2dip"
     android:paddingStart="8dip"
-    android:paddingEnd="8dip">
+    android:paddingEnd="8dip"
+    android:descendantFocusability="blocksDescendants" >
 
     <ImageView android:id="@+id/list_item_icon"
         android:layout_width="@dimen/post_list_icon_height"
@@ -49,5 +50,17 @@
         android:textColor="@color/colorLessigBlue"
         android:singleLine="true"
         android:text="Footer" />
+
+    <ImageButton android:id="@+id/list_item_action"
+        android:layout_width="@dimen/post_list_action_height"
+        android:layout_height="@dimen/post_list_action_height"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:padding="3dp"
+        android:adjustViewBounds="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_share_white_36dp"
+        android:background="@drawable/selector_action_list_share" />
 
 </RelativeLayout>
