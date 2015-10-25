@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -90,17 +91,18 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         mActionAdapter = new ActionArrayAdapter<>(getActivity(),
                 R.layout.list_item_post, mActions);
 
-        requestFeed();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mActionAdapter);
+        mListView.setAdapter(mActionAdapter);
+        mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -110,6 +112,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
     @Override
     public void onAttach(Activity activity) {
+        Log.d(TAG, "onAttach");
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
@@ -117,6 +120,14 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+        requestFeed();
+        setEmptyText("Whoops! No posts to show.");
     }
 
     @Override
