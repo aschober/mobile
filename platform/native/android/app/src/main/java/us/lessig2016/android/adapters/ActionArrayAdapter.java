@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,13 +21,13 @@ import us.lessig2016.android.helpers.LessigHelpers;
 /**
  * Created by Allen on 10/14/15.
  */
-public class PostArrayAdapter<T> extends ArrayAdapter<T> {
-    private static final String TAG = "PostArrayAdapter";
+public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
+    private static final String TAG = "ActionArrayAdapter";
 
     LayoutInflater mInflater;
     int mResource;
 
-    public PostArrayAdapter(Context context, int resource, List objects) {
+    public ActionArrayAdapter(Context context, int resource, List objects) {
         super(context, resource, objects);
         mInflater = LayoutInflater.from(context);
         mResource = resource;
@@ -61,20 +62,19 @@ public class PostArrayAdapter<T> extends ArrayAdapter<T> {
                     "ArrayAdapter requires the resource ID to be a TextView", e);
         }
 
-        Post post = (Post) getItem(position);
+        ParseObject action = (ParseObject) getItem(position);
         String title = "";
         String description = "";
         String footer = "";
 
-        if(post.getType().equals("photo")) {
-            title = post.getFrom().getName();
-            description = post.getMessage();
-            footer = LessigHelpers.getRelativeTimeString(post.getUpdatedTime());
-        } else if(post.getType().equals("link")) {
-            title = post.getName();
-            description = post.getMessage();
-            post.getUpdatedTime();
-            footer = post.getCaption().toUpperCase() + " | " + LessigHelpers.getRelativeTimeString(post.getUpdatedTime());
+        if(action.getString("type").equals("tweet")) {
+            title = action.getString("title");
+            description = action.getString("message");
+            footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
+        } else if(action.getString("type").equals("call")) {
+            title = action.getString("title");
+            description = action.getString("message");
+            footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
         }
 
         titleView.setText(title);
@@ -82,7 +82,7 @@ public class PostArrayAdapter<T> extends ArrayAdapter<T> {
         footerView.setText(footer);
 
         Picasso.with(getContext())
-                .load(post.getPicture())
+                .load(action.getString("picture"))
                 .placeholder(R.drawable.lessig_avatar)
                 .into(image);
 

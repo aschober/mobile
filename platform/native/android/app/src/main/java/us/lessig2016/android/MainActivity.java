@@ -4,34 +4,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import us.lessig2016.android.api.Lessig2016Api;
 import us.lessig2016.android.fragments.CameraFragment;
 import us.lessig2016.android.fragments.PostDetailFragment;
 import us.lessig2016.android.fragments.PostFragment;
@@ -40,11 +31,8 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         CameraFragment.OnFragmentInteractionListener,
         PostDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
-    public static final String BASE_URL = "JAWS_URL_HERE";
-
 
     private PostFragment mPostFragment;
-    private Lessig2016Api mApiService;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -94,17 +82,6 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
             }
         });
 
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        mApiService = retrofit.create(Lessig2016Api.class);
 
         if(savedInstanceState == null) {
             if(mPostFragment == null) {
@@ -174,10 +151,6 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
     public void onFragmentInteraction(Uri uri) {
         Log.d(TAG, "CameraFragmet.onFragmentInteraction: " + uri);
 
-    }
-
-    public Lessig2016Api getApiService() {
-        return mApiService;
     }
 
     /**

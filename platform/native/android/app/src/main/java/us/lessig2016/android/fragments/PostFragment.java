@@ -13,17 +13,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-import us.lessig2016.android.MainActivity;
+import java.util.ArrayList;
+import java.util.List;
+
 import us.lessig2016.android.R;
-import us.lessig2016.android.adapters.PostArrayAdapter;
-import us.lessig2016.android.api.models.Feed;
-import us.lessig2016.android.api.models.Post;
+import us.lessig2016.android.adapters.ActionArrayAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -57,8 +56,8 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
-    private ArrayList<Post> mPosts;
+    private ListAdapter mActionAdapter;
+    private ArrayList<ParseObject> mActions;
 
     // TODO: Rename and change types of parameters
     public static PostFragment newInstance(String param1, String param2) {
@@ -87,10 +86,10 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mActions = new ArrayList<>();
+        mActionAdapter = new ActionArrayAdapter<>(getActivity(),
+                R.layout.list_item_post, mActions);
 
-        mPosts = new ArrayList<>();
-        mAdapter = new PostArrayAdapter<Post>(getActivity(),
-                R.layout.list_item_post, mPosts);
         requestFeed();
     }
 
@@ -101,7 +100,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(mActionAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -131,26 +130,21 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mPosts.get(position).getId());
+            mListener.onFragmentInteraction(mActions.get(position).getObjectId());
         }
     }
 
     private void requestFeed() {
-        Call<Feed> call = ((MainActivity) getActivity()).getApiService().getFeed();
-        call.enqueue(new Callback<Feed>() {
-            @Override
-            public void onResponse(Response<Feed> response, Retrofit retrofit) {
-                int statusCode = response.code();
-                Feed feed = response.body();
-
-                mPosts.addAll(feed.getData());
-                ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, "Fetching Feed Error: " + t.toString());
+        ParseQuery<ParseObject> feedQuery = ParseQuery.getQuery("Action");
+        feedQuery.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> feedList, ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Retrieved " + feedList.size() + " actions");
+                    mActions.addAll(feedList);
+                    ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "Error getting feed: " + e.getMessage());
+                }
             }
         });
     }
