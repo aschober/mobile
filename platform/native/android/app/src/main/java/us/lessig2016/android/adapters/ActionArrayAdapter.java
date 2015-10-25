@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import us.lessig2016.android.R;
-import us.lessig2016.android.api.models.Post;
 import us.lessig2016.android.helpers.LessigHelpers;
 
 /**
