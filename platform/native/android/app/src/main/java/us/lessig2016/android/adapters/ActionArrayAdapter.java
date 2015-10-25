@@ -1,6 +1,8 @@
 package us.lessig2016.android.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,17 +55,11 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
             view = convertView;
         }
 
-        try {
-            titleView = (TextView) view.findViewById(R.id.list_item_title);
-            image = (ImageView) view.findViewById(R.id.list_item_icon);
-            descriptionView = (TextView) view.findViewById(R.id.list_item_description);
-            footerView = (TextView) view.findViewById(R.id.list_item_footer);
-            actionButton = (ImageButton) view.findViewById(R.id.list_item_action);
-        } catch (ClassCastException e) {
-            Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");
-            throw new IllegalStateException(
-                    "ArrayAdapter requires the resource ID to be a TextView", e);
-        }
+        titleView = (TextView) view.findViewById(R.id.list_item_title);
+        image = (ImageView) view.findViewById(R.id.list_item_icon);
+        descriptionView = (TextView) view.findViewById(R.id.list_item_message);
+        footerView = (TextView) view.findViewById(R.id.list_item_footer);
+        actionButton = (ImageButton) view.findViewById(R.id.list_item_action);
 
         final Action action = (Action) getItem(position);
         String title = action.getTitle();
@@ -74,16 +70,11 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
         descriptionView.setText(description);
         footerView.setText(footer);
         Picasso.with(getContext())
-                .load(action.getString("thumbnailUrl"))
-                .placeholder(R.drawable.lessig_avatar)
+                .load(action.getThumbnailUrl())
+                .placeholder(R.drawable.lessig_avatar_grayscale)
                 .into(image);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "action button clicked for: " + action.getObjectId());
-            }
-        });
 
+        LessigHelpers.setupActionView(action, actionButton);
         return view;
     }
 

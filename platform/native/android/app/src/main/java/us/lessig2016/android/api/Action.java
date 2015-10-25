@@ -3,6 +3,12 @@ package us.lessig2016.android.api;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Allen on 10/24/15.
  */
@@ -72,9 +78,21 @@ public class Action extends ParseObject {
         return getInt("priority");
     }
 
-
-
     public String getRef() {
         return getString("ref");
+    }
+
+    public String[] getRecipients() {
+        List<String> al = getList("recipients");
+        Object[] objectArray = al.toArray();
+        return Arrays.copyOf(objectArray, objectArray.length, String[].class);
+    }
+
+    public String getSubject() {
+        return getString("subject");
+    }
+
+    public String getBody() {
+        return getString("body");
     }
 }

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="false">
-        <layer-list>
-            <item android:drawable="@color/colorActionListShare"></item>
-        </layer-list>
+            <shape android:shape="rectangle"  >
+                <corners android:radius="3dip" />
+                <stroke android:width="1dip" android:color="#747474" />
+                <solid android:color="#747474"/>
+            </shape>
     </item>
     <item android:state_pressed="true" >
-        <layer-list>
-            <item android:drawable="@android:color/darker_gray"></item>
-        </layer-list>
+            <shape android:shape="rectangle"  >
+                <corners android:radius="4dip" />
+                <stroke android:width="1dip" android:color="#747474" />
+                <solid android:color="#A1A1A1"/>
+            </shape>
     </item>
 </selector>

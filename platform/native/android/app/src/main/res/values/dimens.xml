@@ -8,6 +8,7 @@
 
     <dimen name="post_list_item_height">85dp</dimen>
     <dimen name="post_list_icon_height">65dp</dimen>
-    <dimen name="post_list_action_height">30dp</dimen>
+
+    <dimen name="post_detail_thumbnail_height">65dp</dimen>
 
 </resources>

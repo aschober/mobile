@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -23,9 +23,11 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import us.lessig2016.android.MainActivity;
 import us.lessig2016.android.R;
 import us.lessig2016.android.adapters.ActionArrayAdapter;
 import us.lessig2016.android.api.Action;
+import us.lessig2016.android.helpers.Constants;
 
 /**
  * A fragment representing a list of Items.
@@ -40,6 +42,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     private static final String TAG = "PostFragment";
 
     private SwipeRefreshLayout swipeContainer;
+    private ParseQuery<Action> mFeedQuery;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -76,6 +79,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         mActions = new ArrayList<>();
         mActionAdapter = new ActionArrayAdapter<>(getActivity(),
                 R.layout.list_item_post, mActions);
+        requestFeed();
     }
 
     @Override
@@ -97,7 +101,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         });
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
+                R.color.colorPrimary,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -109,7 +113,6 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-        requestFeed();
         return view;
     }
 
@@ -136,6 +139,9 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if(mFeedQuery != null) {
+            mFeedQuery.cancel();
+        }
     }
 
     @Override
@@ -148,19 +154,36 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     private void requestFeed() {
-        ParseQuery<Action> feedQuery = ParseQuery.getQuery(Action.class);
-        feedQuery.addDescendingOrder("priority");
-        feedQuery.addDescendingOrder("createdAt");
-        feedQuery.findInBackground(new FindCallback<Action>() {
-            public void done(List<Action> feedList, ParseException e) {
-                if (e == null) {
-                    Log.d(TAG, "Retrieved " + feedList.size() + " actions");
+        Log.d(TAG, "requestFeed");
+        if(mFeedQuery == null) {
+            mFeedQuery = ParseQuery.getQuery(Action.class);
+            mFeedQuery.addDescendingOrder("priority");
+            mFeedQuery.addDescendingOrder("createdAt");
+        }
+        mFeedQuery.findInBackground(new FindCallback<Action>() {
+            public void done(final List<Action> actionList, ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error getting actions: " + e.getMessage());
+
+                } else {
+                    // Release any objects previously pinned for this query.
+                    ParseObject.unpinAllInBackground(Constants.LOCAL_DATASTORE_LABEL_ACTIONS, actionList, new DeleteCallback() {
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.d(TAG, "Error deleting cached actions: " + e.getMessage());
+                                return;
+                            }
+
+                            // Add the latest results for this query to the cache.
+                            ParseObject.pinAllInBackground(Constants.LOCAL_DATASTORE_LABEL_ACTIONS, actionList);
+                        }
+                    });
+
+                    Log.d(TAG, "Retrieved " + actionList.size() + " actions");
                     mActions.clear();
-                    mActions.addAll(feedList);
+                    mActions.addAll(actionList);
                     ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
-                } else {
-                    Log.d(TAG, "Error getting feed: " + e.getMessage());
                 }
             }
         });

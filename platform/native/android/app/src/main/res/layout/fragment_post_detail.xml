@@ -1,10 +1,95 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="us.lessig2016.android.fragments.PostDetailFragment">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="us.lessig2016.android.fragments.PostDetailFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:background="@android:color/white"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/share_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textColor="@android:color/white"
+                android:text="SHARE THIS:"
+                android:textStyle="bold"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="2dip"
+            android:paddingStart="8dip"
+            android:paddingEnd="8dip">
+
+            <ImageView
+                android:id="@+id/details_thumbnail"
+                android:layout_width="@dimen/post_detail_thumbnail_height"
+                android:layout_height="@dimen/post_detail_thumbnail_height" />
+            <TextView
+                android:id="@+id/details_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/details_thumbnail"
+                android:paddingTop="3dp"
+                android:paddingLeft="10dip"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Title" />
+            <TextView
+                android:id="@+id/details_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/details_thumbnail"
+                android:layout_below="@id/details_title"
+                android:paddingTop="2dp"
+                android:paddingLeft="10dip"
+                android:paddingRight="5dip"
+                android:text="Message" />
+            <TextView
+                android:id="@+id/details_footer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/details_thumbnail"
+                android:layout_below="@id/details_message"
+                android:paddingTop="5dp"
+                android:paddingLeft="10dip"
+                android:textColor="@color/colorLessigBlue"
+                android:text="Footer" />
+            <ImageView
+                android:id="@+id/details_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_below="@id/details_footer"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible" />
+
+</android.support.design.widget.CoordinatorLayout>

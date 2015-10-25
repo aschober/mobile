@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,12 +25,14 @@ import us.lessig2016.android.fragments.CameraFragment;
 import us.lessig2016.android.fragments.PostDetailFragment;
 import us.lessig2016.android.fragments.PostFragment;
 
-public class MainActivity extends AppCompatActivity implements PostFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity
+        implements PostFragment.OnFragmentInteractionListener,
         CameraFragment.OnFragmentInteractionListener,
         PostDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
 
     private PostFragment mPostFragment;
+    //private FloatingActionButton mFloatingActionButton;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -60,6 +60,21 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.lessig_header_logo);
 
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
+                if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
+                    getSupportActionBar().setHomeButtonEnabled(true);
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                } else {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    getSupportActionBar().setHomeButtonEnabled(false);
+                }
+            }
+        });
+
+
         /*
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -72,15 +87,17 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         */
+        /*
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+        */
 
 
         if(savedInstanceState == null) {
@@ -132,10 +149,19 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // currently no menu items
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+
+
 
     @Override
     public void onFragmentInteraction(String objectId) {

@@ -27,7 +27,7 @@
         android:singleLine="true"
         android:text="Title" />
 
-    <TextView android:id="@+id/list_item_description"
+    <TextView android:id="@+id/list_item_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -40,13 +40,13 @@
         android:textSize="12dp"
         android:lines="2"
         android:ellipsize="end"
-        android:text="Description" />
+        android:text="Message" />
 
     <TextView android:id="@+id/list_item_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/list_item_description"
+        android:layout_below="@id/list_item_message"
         android:layout_toRightOf="@id/list_item_icon"
         android:layout_toLeftOf="@+id/list_item_action"
         android:paddingTop="5dp"
@@ -57,15 +57,15 @@
         android:text="Footer" />
 
     <ImageButton android:id="@+id/list_item_action"
-        android:layout_width="@dimen/post_list_action_height"
-        android:layout_height="@dimen/post_list_action_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:padding="3dp"
+        android:layout_marginRight="5dp"
+        android:padding="2dp"
         android:adjustViewBounds="false"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_share_white_36dp"
+        android:src="@drawable/ic_launch_white_24dp"
         android:background="@drawable/selector_action_list_share" />
 
 </RelativeLayout>
