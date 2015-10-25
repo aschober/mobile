@@ -28,7 +28,7 @@ query.addDescendingOrder("createdAt")
 | tweet_reply | Reply to a tweet, the provided text should pre-populate the tweet if possible. The reply should also reference the included tweet id. |
 | fb_post | Post to Facebook, the provided text should pre-populate the post if possible. | 
 | fb_share | Share a provided url to Facebook, the provided text should pre-populate the share if possible. |
-| attend | Physical presence is needed at some event, etc. The request should advise people of a common hashtag to use while attending the event. |
+| attend | Physical or virtual presence is needed at some event, etc. The request should generate a calendar event, and could advise people of a common hashtag to use while attending the event. |
 | avatar | Set social media avatar. |
 | instagram | Post to Instagram. |
 
@@ -76,6 +76,7 @@ Most actions have additional fields that are needed to fulfil the integrations, 
 | Attribute | Data Type | Required | Description | 
 | --------- | --------- | -------- | ----------- |
 | body | string | Y | The text that should pre-populate as the tweet. | 
+| ref | string | N | The url that should be included in the tweet which is automatically url shortened by Twitter's t.co service. |
 
 #### Retweet a Message: `retweet`
 
@@ -102,6 +103,16 @@ Most actions have additional fields that are needed to fulfil the integrations, 
 | --------- | --------- | -------- | ----------- |
 | ref | string | Y | The url that needs to be shared via Facebook. | 
 | body | string | Y | The text that should pre-populate the Facebook share post. |
+
+#### Create Calendar Object: `attend`
+
+| Attribute | Data Type | Required | Description | 
+| --------- | --------- | -------- | ----------- |
+| subject | string | Y | The text that should pre-populate the calendar object title. | 
+| body | string | Y | The text that should pre-populate the calendar object body. |
+| startTime | string | Y | The start time formatted as a ISO-8601 date string (`yyyy-MM-dd'T'HH:mm:ssZ`) that should pre-populate the calendar object . |
+| endTime | string | Y | The end time formatted as a ISO-8601 date string (`yyyy-MM-dd'T'HH:mm:ssZ`) that should pre-populate the calendar object . |
+| location | string| N | The text that should pre-populate the calendar object location. |
 
 #### Update your Social Media Avatars: `avatar`
 
