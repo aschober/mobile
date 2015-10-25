@@ -44,6 +44,7 @@ query.addDescendingOrder("createdAt")
 | imageUrl | url | N | The image that is shown in the action detail view. If this is not specified, it should not show an image on the detail screen.|
 | createdAt | datetime | (auto) | The time the record was created. |
 | updatedAt | datetime | (auto) | The time the recond was last updated. |
+| priority | number | Y | Should default to 0. Field is used to control the order of the action list. The higher the priority, the higher on the list the item is.|
 
 
 ### Actions with additional fields
