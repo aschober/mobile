@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         Button donate = new Button(this);
         donate.setText(R.string.action_donate);
         donate.setTextColor(Color.WHITE);
-        donate.getBackground().setColorFilter(0xFF3A99D8, PorterDuff.Mode.MULTIPLY);
+        donate.getBackground().setColorFilter(getResources().getColor(R.color.colorDonateBlue), PorterDuff.Mode.MULTIPLY);
         menu.findItem(R.id.action_donate).setActionView(donate);
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
