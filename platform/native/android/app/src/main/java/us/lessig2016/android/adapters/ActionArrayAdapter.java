@@ -1,11 +1,13 @@
 package us.lessig2016.android.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +46,8 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
         TextView descriptionView;
         TextView footerView;
         ImageView image;
+        ImageButton actionButton;
+
         if (convertView == null) {
             view = inflater.inflate(resource, parent, false);
         } else {
@@ -55,13 +59,14 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
             image = (ImageView) view.findViewById(R.id.list_item_icon);
             descriptionView = (TextView) view.findViewById(R.id.list_item_description);
             footerView = (TextView) view.findViewById(R.id.list_item_footer);
+            actionButton = (ImageButton) view.findViewById(R.id.list_item_action);
         } catch (ClassCastException e) {
             Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");
             throw new IllegalStateException(
                     "ArrayAdapter requires the resource ID to be a TextView", e);
         }
 
-        ParseObject action = (ParseObject) getItem(position);
+        final ParseObject action = (ParseObject) getItem(position);
         String title = "";
         String description = "";
         String footer = "";
@@ -79,11 +84,16 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
         titleView.setText(title);
         descriptionView.setText(description);
         footerView.setText(footer);
-
         Picasso.with(getContext())
                 .load(action.getString("picture"))
                 .placeholder(R.drawable.lessig_avatar)
                 .into(image);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "action button clicked for: " + action.getObjectId());
+            }
+        });
 
         return view;
     }
