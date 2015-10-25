@@ -71,21 +71,15 @@ public class ActionArrayAdapter<T> extends ArrayAdapter<T> {
         String description = "";
         String footer = "";
 
-        if(action.getString("type").equals("tweet")) {
-            title = action.getString("title");
-            description = action.getString("message");
-            footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
-        } else if(action.getString("type").equals("call")) {
-            title = action.getString("title");
-            description = action.getString("message");
-            footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
-        }
+        title = action.getString("title");
+        description = action.getString("message");
+        footer = LessigHelpers.getRelativeTimeString(action.getUpdatedAt());
 
         titleView.setText(title);
         descriptionView.setText(description);
         footerView.setText(footer);
         Picasso.with(getContext())
-                .load(action.getString("picture"))
+                .load(action.getString("thumbnailUrl"))
                 .placeholder(R.drawable.lessig_avatar)
                 .into(image);
         actionButton.setOnClickListener(new View.OnClickListener() {

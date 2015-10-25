@@ -3,6 +3,7 @@ package us.lessig2016.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,15 +38,7 @@ import us.lessig2016.android.adapters.ActionArrayAdapter;
 public class PostFragment extends Fragment implements AbsListView.OnItemClickListener {
     private static final String TAG = "PostFragment";
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private SwipeRefreshLayout swipeContainer;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -61,11 +54,9 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     private ArrayList<ParseObject> mActions;
 
     // TODO: Rename and change types of parameters
-    public static PostFragment newInstance(String param1, String param2) {
+    public static PostFragment newInstance() {
         PostFragment fragment = new PostFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,17 +71,10 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
-
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         mActions = new ArrayList<>();
         mActionAdapter = new ActionArrayAdapter<>(getActivity(),
                 R.layout.list_item_post, mActions);
-
     }
 
     @Override
@@ -99,6 +83,24 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                requestFeed();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mActionAdapter);
@@ -106,7 +108,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
+        requestFeed();
         return view;
     }
 
@@ -126,7 +128,6 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        requestFeed();
         setEmptyText("Whoops! No posts to show.");
     }
 
@@ -147,12 +148,16 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
     private void requestFeed() {
         ParseQuery<ParseObject> feedQuery = ParseQuery.getQuery("Action");
+        feedQuery.addDescendingOrder("priority");
+        feedQuery.addDescendingOrder("createdAt");
         feedQuery.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> feedList, ParseException e) {
                 if (e == null) {
                     Log.d(TAG, "Retrieved " + feedList.size() + " actions");
+                    mActions.clear();
                     mActions.addAll(feedList);
                     ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
                 } else {
                     Log.d(TAG, "Error getting feed: " + e.getMessage());
                 }

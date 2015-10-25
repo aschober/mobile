@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
 
         if(savedInstanceState == null) {
             if(mPostFragment == null) {
-                mPostFragment = PostFragment.newInstance(null, null);
+                mPostFragment = PostFragment.newInstance();
             }
             getSupportFragmentManager()
                     .beginTransaction()
@@ -138,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements PostFragment.OnFr
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
-        Log.d(TAG, "PostFragment.onFragmentInteraction: " + id);
+    public void onFragmentInteraction(String objectId) {
+        Log.d(TAG, "PostFragment.onFragmentInteraction: " + objectId);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, PostDetailFragment.newInstance(null, null));
+        transaction.replace(R.id.content, PostDetailFragment.newInstance(objectId));
         transaction.addToBackStack(null);
         transaction.commit();
     }
